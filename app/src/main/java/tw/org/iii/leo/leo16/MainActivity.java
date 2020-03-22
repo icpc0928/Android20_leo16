@@ -1,7 +1,12 @@
 package tw.org.iii.leo.leo16;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,18 +28,49 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity {
     private TextView mesg ;
     private ImageView img;
+    private String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mesg = findViewById(R.id.mesg);
-        img = findViewById(R.id.img);
 
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            // No explanation needed; request the permission
+            ActivityCompat.requestPermissions(this,
+                    permissions,
+                    9487);
+
+
+        }else{
+
+            init();
+        }
 
 
     }
-//拿頁面原始碼 可作爬蟲
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            init();
+        }
+    }
+
+    private void init(){
+
+        mesg = findViewById(R.id.mesg);
+        img = findViewById(R.id.img);
+    }
+
+    //拿頁面原始碼 可作爬蟲
     public void test1(View view){
         StringRequest request = new StringRequest(
                 Request.Method.GET,
@@ -149,5 +185,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void test5(View view){
 
+    }
 }
