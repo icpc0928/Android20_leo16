@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.toolbox.HttpHeaderParser;
 
 import java.util.Map;
 
@@ -27,12 +28,19 @@ public class LeoInputStreamRequest extends Request<byte[]> {
     }
 
     @Override
+    public Map<String, String> getParams() {
+        return params;
+    }
+
+    @Override
     protected Response<byte[]> parseNetworkResponse(NetworkResponse response) {
-        return null;
+        responseHeader = response.headers;
+        return Response.success(response.data, HttpHeaderParser.parseCacheHeaders(response));
     }
 
     @Override
     protected void deliverResponse(byte[] response) {
+        listener.onResponse(response);
 
     }
 }
