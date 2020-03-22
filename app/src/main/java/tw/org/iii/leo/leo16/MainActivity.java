@@ -13,6 +13,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
@@ -84,13 +85,13 @@ public class MainActivity extends AppCompatActivity {
         mesg.setText("");
         try {
             JSONArray root = new JSONArray(json);
-            for(int i = 0; i<root.length();i++){
+            for (int i=0; i<root.length(); i++){
                 JSONObject row = root.getJSONObject(i);
-                mesg.append(row.getString(row.getString("Name")+":"+
-                        row.getString("Address")+"\n"));
+                mesg.append(row.getString("Name") + ":"
+                        + row.getString("Address") + "\n");
             }
-        } catch (Exception e) {
-            Log.v("leo",e.toString());
+        }catch (Exception e){
+            Log.v("leo", e.toString());
         }
 
 
@@ -113,4 +114,38 @@ public class MainActivity extends AppCompatActivity {
         MainApp.queue.add(request);
     }
 
+
+
+    public void test4(View view){
+        JsonArrayRequest request = new JsonArrayRequest(
+                "https://data.coa.gov.tw/Service/OpenData/ODwsv/ODwsvTravelFood.aspx",
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        parseJSON2(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }
+        );
+
+        MainApp.queue.add(request);
+    }
+
+    private void parseJSON2(JSONArray root){
+        mesg.setText("");
+        try {
+            for (int i=0; i<root.length(); i++){
+                JSONObject row = root.getJSONObject(i);
+                mesg.append(row.getString("Name") + ":"
+                        + row.getString("Address") + "\n");
+            }
+        }catch (Exception e){
+            Log.v("leo", e.toString());
+        }
+    }
 }
