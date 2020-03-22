@@ -18,9 +18,10 @@ public class LeoInputStreamRequest extends Request<byte[]> {
     public LeoInputStreamRequest(
             int method,
             String url,
+            Map<String,String> params ,
             Response.Listener<byte[]> listener,
-            @Nullable Response.ErrorListener errorListener,
-            Map<String,String> params ) {
+            @Nullable Response.ErrorListener errorListener
+            ) {
         super(method, url, errorListener);
         this.listener = listener;
         this.params = params;
